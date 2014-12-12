@@ -65,10 +65,10 @@ PYCODE
 end
 
 
-if node['platform_version']==12.04 
+if node['platform_version']=='12.04'
   platform_name = 'precise'
 end
-if node['platform_version']==14.04 
+if node['platform_version']=='14.04'
   platform_name = 'trusty'
 end
 
