@@ -64,23 +64,19 @@ PYCODE
   not_if {File.exists?("/var/server.crt")}
 end
 
-file '/tmp/platform_version' do
-  owner 'root'
-  group 'root'
-  mode '0666'
-  content node['platform_version']
+
+if node['platform_version']==12.04 
+  platform_name = 'precise'
+end
+if node['platform_version']==14.04 
+  platform_name = 'trusty'
 end
 
 
 
-
-=begin
-http://s3.amazonaws.com/downloads.basho.com/riak/2.0/2.0.2/ubuntu/precise/riak_2.0.2-1_amd64.deb
-
-
 remote_file "#{Chef::Config[:file_cache_path]}/riak_2.0.2-1_amd64.deb" do
   user "root"
-  source "http://s3.amazonaws.com/downloads.basho.com/riak/2.0/2.0.2/ubuntu/trusty/riak_2.0.2-1_amd64.deb"     
+  source "http://s3.amazonaws.com/downloads.basho.com/riak/2.0/2.0.2/ubuntu/#{platform_name}/riak_2.0.2-1_amd64.deb"     
   action :create_if_missing
 end
 dpkg_package "riak_deb" do
@@ -93,7 +89,7 @@ service "riak" do
   action [:start,:enable]
 end
 
-=end
+
 
 
 
