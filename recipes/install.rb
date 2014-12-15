@@ -1,4 +1,8 @@
 
+datacenter = node.name.split('-')[0]
+server_type = node.name.split('-')[1]
+location = node.name.split('-')[2]
+
 package "libssl0.9.8" do
   action :install
 end
@@ -95,7 +99,12 @@ execute "riak-restart" do
   action :nothing
 end
  
+
 ipaddress = node[:ipaddress]  
+if node.chef_environment=='local'
+  ipaddress = '127.0.0.1'
+end
+
 template "/etc/riak/riak.conf" do
   path "/etc/riak/riak.conf"
   source "riak-#{node['platform_version']}.conf.erb"
