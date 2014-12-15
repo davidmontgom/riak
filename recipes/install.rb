@@ -114,8 +114,8 @@ template "/etc/riak/riak.conf" do
   group "root"
   mode "0644"
   variables :enviroment => node.chef_environment, :ipaddress => ipaddress, :public_ipaddress => public_ipaddress
-  notifies :run, "execute[riak-restart]", :delayed
-  #notifies :restart, resources(:service => "riak"), :immediately
+  #notifies :run, "execute[riak-restart]", :delayed
+  notifies :restart, resources(:service => "riak"), :immediately
 end
 
 
