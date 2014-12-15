@@ -122,4 +122,14 @@ end
 
 
 
+=begin
+riak-admin cluster join riak@192.241.213.141
+riak-admin cluster plan
+riak-admin cluster commit
+=end
+
+
+
+
+
 
