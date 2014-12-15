@@ -99,10 +99,12 @@ execute "riak-restart" do
   action :nothing
 end
  
-
+#8098 8087
 ipaddress = node[:ipaddress]  
+public_ipaddress = ipaddress
 if node.chef_environment=='local'
   ipaddress = '127.0.0.1'
+  public_ipaddress = '127.0.0.1'
 end
 
 template "/etc/riak/riak.conf" do
@@ -111,7 +113,7 @@ template "/etc/riak/riak.conf" do
   owner "root"
   group "root"
   mode "0644"
-  variables :enviroment => node.chef_environment, :ipaddress => ipaddress
+  variables :enviroment => node.chef_environment, :ipaddress => ipaddress, :public_ipaddress => public_ipaddress
   notifies :run, "execute[riak-restart]", :delayed
   #notifies :restart, resources(:service => "riak"), :immediately
 end
