@@ -73,8 +73,6 @@ if node['platform_version']=='14.04'
 end
 
 
-
-
 remote_file "#{Chef::Config[:file_cache_path]}/riak_2.0.2-1_amd64.deb" do
   user "root"
   source "http://s3.amazonaws.com/downloads.basho.com/riak/2.0/2.0.2/ubuntu/#{platform_name}/riak_2.0.2-1_amd64.deb"     
@@ -96,7 +94,8 @@ execute "riak-restart" do
   command "riak stop && riak start"
   action :nothing
 end
-   
+ 
+ipaddress = node[:ipaddress]  
 template "/etc/riak/riak.conf" do
   path "/etc/riak/riak.conf"
   source "riak-#{node['platform_version']}.conf.erb"
