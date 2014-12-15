@@ -145,6 +145,7 @@ from boto.route53.connection import Route53Connection
 from boto.route53.record import ResourceRecordSets
 from boto.route53.record import Record
 import hashlib
+import time
 
 conn = Route53Connection('#{AWS_ACCESS_KEY_ID}', '#{AWS_SECRET_ACCESS_KEY}')
 records = conn.get_all_rrsets('#{zone_id}')
@@ -158,8 +159,10 @@ for record in records:
 if ipaddress:
   cmd = "riak-admin cluster join riak@%s" % (ipaddress)
   os.system(cmd)
+  time.sleep(3)
   cmd  = "riak-admin cluster plan"
   os.system(cmd)
+  time.sleep(3)
   cmd = "riak-admin cluster commit"
   os.system(cmd)
   
