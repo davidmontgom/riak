@@ -1,4 +1,6 @@
 
+
+
 datacenter = node.name.split('-')[0]
 server_type = node.name.split('-')[1]
 location = node.name.split('-')[2]
@@ -120,14 +122,53 @@ end
 
 
 
+if datacenter != "local"
+  
+data_bag("my_data_bag")
+db = data_bag_item("my_data_bag", "my")
+AWS_ACCESS_KEY_ID = db[node.chef_environment]['aws']['AWS_ACCESS_KEY_ID']
+AWS_SECRET_ACCESS_KEY = db[node.chef_environment]['aws']['AWS_SECRET_ACCESS_KEY']
+zone_id = db[node.chef_environment]['aws']['route53']['zone_id']
+domain = db[node.chef_environment]['aws']['route53']['domain']
 
+easy_install_package "boto" do
+  action :install
+end
 
-=begin
-riak-admin cluster join riak@192.241.213.141
-riak-admin cluster plan
-riak-admin cluster commit
-=end
+script "riak_cluster_add" do
+  interpreter "python"
+  user "root"
+  cwd "/root"
+code <<-PYCODE
+import os
+from boto.route53.connection import Route53Connection
+from boto.route53.record import ResourceRecordSets
+from boto.route53.record import Record
+import hashlib
 
+conn = Route53Connection('#{AWS_ACCESS_KEY_ID}', '#{AWS_SECRET_ACCESS_KEY}')
+records = conn.get_all_rrsets('#{zone_id}')
+ipaddress = None
+for record in records:
+  if record.name.find('riak')>=0 and record.name.find('#{location}')>=0 and record.name.find('#{node.chef_environment}')>=0 and record.name.find('#{datacenter}')>=0:
+    if record.resource_records[0]!='#{node[:ipaddress]}':
+      ipaddress=record.resource_records[0]
+      break
+
+if ipaddress:
+  cmd = "riak-admin cluster join riak@%s" % (ipaddress)
+  os.system(cmd)
+  cmd  = "riak-admin cluster plan"
+  os.system(cmd)
+  cmd = "riak-admin cluster commit"
+  os.system(cmd)
+  
+os.system("touch #{Chef::Config[:file_cache_path]}/riak.lock")
+PYCODE
+not_if {File.exists?("#{Chef::Config[:file_cache_path]}/riak.lock")}
+end
+
+end
 
 
 
