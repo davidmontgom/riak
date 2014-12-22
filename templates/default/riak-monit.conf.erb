@@ -1,4 +1,4 @@
-check process riak-elang matching "*<%= @process_matching %>"
+check process riak-elang matching "*.<%= @process_matching %>"
   #group riak 
   start program = "<%= @start_program %>"
   if failed host <%= @http_host %> port <%= @http_port %> protocol http 
