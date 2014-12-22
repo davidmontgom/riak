@@ -8,7 +8,7 @@ template "/etc/monit/conf.d/riak-monit.conf" do
   owner "root"
   group "root"
   variables(
-    :process_matching => "/usr/lib/riak/erts-5.9.1/bin/beam.smp",
+    :process_matching => "/usr/lib/riak/erts-5.10.3/bin/beam.smp", 
     :start_program =>  "riak start",
     :http_host => "localhost",
     :http_port => "8098"

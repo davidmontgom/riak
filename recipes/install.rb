@@ -166,6 +166,8 @@ if ipaddress:
   cmd = "riak-admin cluster commit"
   os.system(cmd)
   
+  #riak-admin status | grep ring_members
+  
 os.system("touch #{Chef::Config[:file_cache_path]}/riak.lock")
 PYCODE
 not_if {File.exists?("#{Chef::Config[:file_cache_path]}/riak.lock")}
