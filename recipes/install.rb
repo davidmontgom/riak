@@ -78,7 +78,7 @@ if node['platform_version']=='14.04'
   platform_name = 'trusty'
 end
 
-
+version = '2.1.0-1'
 remote_file "#{Chef::Config[:file_cache_path]}/riak_2.0.2-1_amd64.deb" do
   user "root"
   source "http://s3.amazonaws.com/downloads.basho.com/riak/2.0/2.0.2/ubuntu/#{platform_name}/riak_2.0.2-1_amd64.deb"     
